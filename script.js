@@ -650,9 +650,16 @@ function provideDownloadOption(results, fileData) {
         }
     };
 
+    // 既存のダウンロードボタンがあれば削除
+    const existingButton = resultsContainer.parentElement.querySelector('button.convert-button[data-download]');
+    if (existingButton) {
+        existingButton.remove();
+    }
+
     // ダウンロードボタンを追加
     const downloadButton = document.createElement('button');
     downloadButton.className = 'convert-button';
+    downloadButton.setAttribute('data-download', 'true');
     downloadButton.style.marginTop = '15px';
     downloadButton.textContent = '変換されたGeoJSONをダウンロード';
     downloadButton.onclick = () => {
