@@ -84,17 +84,17 @@ document.addEventListener('DOMContentLoaded', () => {
     fileUploadArea.addEventListener('dragleave', handleDragLeave);
     fileUploadArea.addEventListener('drop', handleFileDrop);
 
-    // 一般的なEPSGコードのデフォルト
-    setDefaultSystems();
+    // 初期状態を設定
+    initializeDefaults();
 });
 
-// デフォルト座標系を設定
-function setDefaultSystems() {
-    selectedFromSystem = { code: 'EPSG:4326', name: 'WGS 84' };
-    fromSystemDisplay.textContent = 'EPSG:4326: WGS 84';
-
-    toSystemSelect.value = 'EPSG:3857';
-    selectedToSystem = { code: 'EPSG:3857', name: 'Web Mercator' };
+// 初期状態を設定（座標系は未設定）
+function initializeDefaults() {
+    selectedFromSystem = null;
+    selectedToSystem = null;
+    fromSystemDisplay.textContent = '（ファイルアップロード後に自動検出）';
+    fromSystemDisplay.style.color = '#999';
+    toSystemSelect.value = '';
 }
 
 // 変換後の座標系が変更された
@@ -215,8 +215,12 @@ async function handleGeoJSON(file) {
     if (crsInfo) {
         selectedFromSystem = { code: crsInfo.code, name: crsInfo.name };
         fromSystemDisplay.textContent = `${crsInfo.code}: ${crsInfo.name}`;
+        fromSystemDisplay.style.color = '#000';
     } else {
-        fromSystemDisplay.textContent = '（座標系情報が見つかりません）';
+        // 座標系が見つからない場合はデフォルト値を設定
+        selectedFromSystem = { code: 'EPSG:4326', name: 'WGS 84' };
+        fromSystemDisplay.textContent = 'EPSG:4326: WGS 84 （デフォルト・確認推奨）';
+        fromSystemDisplay.style.color = '#f44336';
     }
 }
 
@@ -249,8 +253,12 @@ async function handleTopoJSON(file) {
     if (crsInfo) {
         selectedFromSystem = { code: crsInfo.code, name: crsInfo.name };
         fromSystemDisplay.textContent = `${crsInfo.code}: ${crsInfo.name}`;
+        fromSystemDisplay.style.color = '#000';
     } else {
-        fromSystemDisplay.textContent = '（座標系情報が見つかりません）';
+        // 座標系が見つからない場合はデフォルト値を設定（TopoJSON は通常メタデータなし）
+        selectedFromSystem = { code: 'EPSG:4326', name: 'WGS 84' };
+        fromSystemDisplay.textContent = 'EPSG:4326: WGS 84 （デフォルト・確認推奨）';
+        fromSystemDisplay.style.color = '#f44336';
     }
 }
 
