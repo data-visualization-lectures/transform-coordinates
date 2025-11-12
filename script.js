@@ -48,9 +48,54 @@ Object.entries(epsgDefinitions).forEach(([code, def]) => {
     proj4.defs(code, def);
 });
 
+// 座標系の説明
+const systemDescriptions = {
+    'EPSG:4326': '全世界共通のGPS座標系です。緯度経度（度単位）で表現されます。',
+    'EPSG:3857': 'Web地図で標準的に使用される投影座標系です。メートル単位で、Webサービス向けです。',
+    'EPSG:2451': '日本の平面直角座標系（JGD2000 I系）です。メートル単位。',
+    'EPSG:2452': '日本の平面直角座標系（JGD2000 II系）です。メートル単位。',
+    'EPSG:2453': '日本の平面直角座標系（JGD2000 III系）です。メートル単位。',
+    'EPSG:2454': '日本の平面直角座標系（JGD2000 IV系）です。メートル単位。',
+    'EPSG:2455': '日本の平面直角座標系（JGD2000 V系）です。メートル単位。',
+    'EPSG:2456': '日本の平面直角座標系（JGD2000 VI系）です。メートル単位。',
+    'EPSG:2457': '日本の平面直角座標系（JGD2000 VII系）です。メートル単位。',
+    'EPSG:2458': '日本の平面直角座標系（JGD2000 VIII系）です。メートル単位。',
+    'EPSG:2459': '日本の平面直角座標系（JGD2000 IX系）です。メートル単位。',
+    'EPSG:2460': '日本の平面直角座標系（JGD2000 X系）です。メートル単位。',
+    'EPSG:2461': '日本の平面直角座標系（JGD2000 XI系）です。メートル単位。',
+    'EPSG:2462': '日本の平面直角座標系（JGD2000 XII系）です。メートル単位。',
+    'EPSG:2463': '日本の平面直角座標系（JGD2000 XIII系）です。メートル単位。',
+    'EPSG:2464': '日本の平面直角座標系（JGD2000 XIV系）です。メートル単位。',
+    'EPSG:2465': '日本の平面直角座標系（JGD2000 XV系）です。メートル単位。',
+    'EPSG:2466': '日本の平面直角座標系（JGD2000 XVI系）です。メートル単位。',
+    'EPSG:2467': '日本の平面直角座標系（JGD2000 XVII系）です。メートル単位。',
+    'EPSG:2468': '日本の平面直角座標系（JGD2000 XVIII系）です。メートル単位。',
+    'EPSG:2469': '日本の平面直角座標系（JGD2000 XIX系）です。メートル単位。',
+    'EPSG:6670': '日本の平面直角座標系（JGD2011 I系）です。最新のGPSデータム。メートル単位。',
+    'EPSG:6671': '日本の平面直角座標系（JGD2011 II系）です。最新のGPSデータム。メートル単位。',
+    'EPSG:6672': '日本の平面直角座標系（JGD2011 III系）です。最新のGPSデータム。メートル単位。',
+    'EPSG:6673': '日本の平面直角座標系（JGD2011 IV系）です。最新のGPSデータム。メートル単位。',
+    'EPSG:6674': '日本の平面直角座標系（JGD2011 V系）です。最新のGPSデータム。メートル単位。',
+    'EPSG:6675': '日本の平面直角座標系（JGD2011 VI系）です。最新のGPSデータム。メートル単位。',
+    'EPSG:6676': '日本の平面直角座標系（JGD2011 VII系）です。最新のGPSデータム。メートル単位。',
+    'EPSG:6677': '日本の平面直角座標系（JGD2011 VIII系）です。最新のGPSデータム。メートル単位。',
+    'EPSG:6678': '日本の平面直角座標系（JGD2011 IX系）です。最新のGPSデータム。メートル単位。',
+    'EPSG:6679': '日本の平面直角座標系（JGD2011 X系）です。最新のGPSデータム。メートル単位。',
+    'EPSG:6680': '日本の平面直角座標系（JGD2011 XI系）です。最新のGPSデータム。メートル単位。',
+    'EPSG:6681': '日本の平面直角座標系（JGD2011 XII系）です。最新のGPSデータム。メートル単位。',
+    'EPSG:6682': '日本の平面直角座標系（JGD2011 XIII系）です。最新のGPSデータム。メートル単位。',
+    'EPSG:6683': '日本の平面直角座標系（JGD2011 XIV系）です。最新のGPSデータム。メートル単位。',
+    'EPSG:6684': '日本の平面直角座標系（JGD2011 XV系）です。最新のGPSデータム。メートル単位。',
+    'EPSG:6685': '日本の平面直角座標系（JGD2011 XVI系）です。最新のGPSデータム。メートル単位。',
+    'EPSG:6686': '日本の平面直角座標系（JGD2011 XVII系）です。最新のGPSデータム。メートル単位。',
+    'EPSG:6687': '日本の平面直角座標系（JGD2011 XVIII系）です。最新のGPSデータム。メートル単位。',
+    'EPSG:6688': '日本の平面直角座標系（JGD2011 XIX系）です。最新のGPSデータム。メートル単位。'
+};
+
 // DOM要素
 const toSystemSelect = document.getElementById('toSystemSelect');
 const fromSystemDisplay = document.getElementById('fromSystemDisplay');
+const toSystemDescription = document.getElementById('toSystemDescription');
 const swapButton = document.getElementById('swapButton');
 const coordinatesInput = document.getElementById('coordinates');
 const convertButton = document.getElementById('convertButton');
@@ -102,6 +147,7 @@ function handleToSystemChange(e) {
     const code = e.target.value;
     if (!code) {
         selectedToSystem = null;
+        toSystemDescription.style.display = 'none';
         clearError();
         return;
     }
@@ -111,6 +157,16 @@ function handleToSystemChange(e) {
     const name = option.text.split(' - ').slice(1).join(' - ') || option.text;
 
     selectedToSystem = { code, name };
+
+    // 座標系の説明を表示
+    const description = systemDescriptions[code];
+    if (description) {
+        toSystemDescription.textContent = description;
+        toSystemDescription.style.display = 'block';
+    } else {
+        toSystemDescription.style.display = 'none';
+    }
+
     clearError();
 }
 
