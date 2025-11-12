@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>座標変換ツール</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>座標変換ツール</h1>
+        <p class="subtitle">異なる座標系間で座標を変換します</p>
+
+        <!-- ファイルアップロード -->
+        <div class="section">
+            <label>ファイルをアップロード:</label>
+            <div class="file-upload-area">
+                <input
+                    type="file"
+                    id="fileInput"
+                    accept=".geojson,.json,.topojson,.shp,.dbf,.shx"
+                    class="file-input"
+                >
+                <label for="fileInput" class="file-upload-label">
+                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <span>ファイルをドラッグ＆ドロップ<br>または選択</span>
+                </label>
+                <small class="hint">対応形式: GeoJSON, TopoJSON</small>
+            </div>
+            <div id="fileInfo" class="file-info" style="display: none;"></div>
+            <div id="filePreview" class="file-preview" style="display: none;"></div>
+        </div>
+
+        <!-- 座標系選択 -->
+        <div class="section">
+            <div class="coordinate-system-row">
+                <!-- 変換前の座標系（ファイルから自動検出） -->
+                <div class="coordinate-system">
+                    <label>変換前の座標系:</label>
+                    <div id="fromSystemDisplay" class="system-display-box"></div>
+                </div>
+
+                <!-- スワップボタン -->
+                <button id="swapButton" class="swap-button" title="座標系を交換">⇄</button>
+
+                <!-- 変換後の座標系（ドロップダウン選択） -->
+                <div class="coordinate-system">
+                    <label for="toSystemSelect">変換後の座標系:</label>
+                    <select id="toSystemSelect" class="input-field">
+                        <option value="">-- 座標系を選択 --</option>
+                        <option value="EPSG:4326">EPSG:4326 - WGS 84</option>
+                        <option value="EPSG:3857">EPSG:3857 - Web Mercator</option>
+                        <option value="EPSG:2451">EPSG:2451 - JGD2000 / Japan Zone 1</option>
+                        <option value="EPSG:2452">EPSG:2452 - JGD2000 / Japan Zone 2</option>
+                        <option value="EPSG:2453">EPSG:2453 - JGD2000 / Japan Zone 3</option>
+                        <option value="EPSG:2454">EPSG:2454 - JGD2000 / Japan Zone 4</option>
+                        <option value="EPSG:2455">EPSG:2455 - JGD2000 / Japan Zone 5</option>
+                        <option value="EPSG:2456">EPSG:2456 - JGD2000 / Japan Zone 6</option>
+                        <option value="EPSG:2457">EPSG:2457 - JGD2000 / Japan Zone 7</option>
+                        <option value="EPSG:2458">EPSG:2458 - JGD2000 / Japan Zone 8</option>
+                        <option value="EPSG:2459">EPSG:2459 - JGD2000 / Japan Zone 9</option>
+                        <option value="EPSG:2460">EPSG:2460 - JGD2000 / Japan Zone 10</option>
+                        <option value="EPSG:2461">EPSG:2461 - JGD2000 / Japan Zone 11</option>
+                        <option value="EPSG:2462">EPSG:2462 - JGD2000 / Japan Zone 12</option>
+                        <option value="EPSG:2463">EPSG:2463 - JGD2000 / Japan Zone 13</option>
+                        <option value="EPSG:2464">EPSG:2464 - JGD2000 / Japan Zone 14</option>
+                        <option value="EPSG:2465">EPSG:2465 - JGD2000 / Japan Zone 15</option>
+                        <option value="EPSG:2466">EPSG:2466 - JGD2000 / Japan Zone 16</option>
+                        <option value="EPSG:2467">EPSG:2467 - JGD2000 / Japan Zone 17</option>
+                        <option value="EPSG:2468">EPSG:2468 - JGD2000 / Japan Zone 18</option>
+                        <option value="EPSG:2469">EPSG:2469 - JGD2000 / Japan Zone 19</option>
+                        <option value="EPSG:6670">EPSG:6670 - JGD2011 / Japan Plane Rectangular CS I</option>
+                        <option value="EPSG:6671">EPSG:6671 - JGD2011 / Japan Plane Rectangular CS II</option>
+                        <option value="EPSG:6672">EPSG:6672 - JGD2011 / Japan Plane Rectangular CS III</option>
+                        <option value="EPSG:6673">EPSG:6673 - JGD2011 / Japan Plane Rectangular CS IV</option>
+                        <option value="EPSG:6674">EPSG:6674 - JGD2011 / Japan Plane Rectangular CS V</option>
+                        <option value="EPSG:6675">EPSG:6675 - JGD2011 / Japan Plane Rectangular CS VI</option>
+                        <option value="EPSG:6676">EPSG:6676 - JGD2011 / Japan Plane Rectangular CS VII</option>
+                        <option value="EPSG:6677">EPSG:6677 - JGD2011 / Japan Plane Rectangular CS VIII</option>
+                        <option value="EPSG:6678">EPSG:6678 - JGD2011 / Japan Plane Rectangular CS IX</option>
+                        <option value="EPSG:6679">EPSG:6679 - JGD2011 / Japan Plane Rectangular CS X</option>
+                        <option value="EPSG:6680">EPSG:6680 - JGD2011 / Japan Plane Rectangular CS XI</option>
+                        <option value="EPSG:6681">EPSG:6681 - JGD2011 / Japan Plane Rectangular CS XII</option>
+                        <option value="EPSG:6682">EPSG:6682 - JGD2011 / Japan Plane Rectangular CS XIII</option>
+                        <option value="EPSG:6683">EPSG:6683 - JGD2011 / Japan Plane Rectangular CS XIV</option>
+                        <option value="EPSG:6684">EPSG:6684 - JGD2011 / Japan Plane Rectangular CS XV</option>
+                        <option value="EPSG:6685">EPSG:6685 - JGD2011 / Japan Plane Rectangular CS XVI</option>
+                        <option value="EPSG:6686">EPSG:6686 - JGD2011 / Japan Plane Rectangular CS XVII</option>
+                        <option value="EPSG:6687">EPSG:6687 - JGD2011 / Japan Plane Rectangular CS XVIII</option>
+                        <option value="EPSG:6688">EPSG:6688 - JGD2011 / Japan Plane Rectangular CS XIX</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 変換実行ボタン -->
+        <button id="convertButton" class="convert-button">座標を変換</button>
+
+        <!-- 結果表示エリア -->
+        <div id="resultsSection" class="section results-section" style="display: none;">
+            <h2>変換結果</h2>
+            <div id="results" class="results-container"></div>
+        </div>
+
+        <!-- エラー表示 -->
+        <div id="errorSection" class="section error-section" style="display: none;">
+            <h3>エラー</h3>
+            <div id="errorMessage" class="error-message"></div>
+        </div>
+
+        <!-- ローディング表示 -->
+        <div id="loadingIndicator" class="loading-indicator" style="display: none;">
+            <div class="spinner"></div>
+            <p>変換中...</p>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
