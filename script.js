@@ -31,8 +31,8 @@ Object.entries(epsgDefinitions).forEach(([code, def]) => {
 
 // 座標系の説明
 const systemDescriptions = {
-    'EPSG:4326': '全世界共通のGPS座標系です。緯度経度（度単位）で表現されます。',
-    'EPSG:3857': 'Web地図で標準的に使用される投影座標系です。メートル単位で、Webサービス向けです。',
+    'EPSG:4326': '全世界共通のGPS座標系です。緯度経度（度単位）で表現されます。Web地図系ツール（Foursquare / Mapbox / MapLibre / Google Maps / Cesium / Kepler.gl / GeoJSON 全般）で最適な形式。',
+    'EPSG:3857': 'Web地図で標準的に使用される投影座標系です。メートル単位で表現されます。Web地図タイル（ズームレベル／XYZ）用データで最適な形式。',
     'EPSG:6670': '日本の平面直角座標系（JGD2011 I系）です。最新のGPSデータム。メートル単位。',
     'EPSG:6671': '日本の平面直角座標系（JGD2011 II系）です。最新のGPSデータム。メートル単位。',
     'EPSG:6672': '日本の平面直角座標系（JGD2011 III系）です。最新のGPSデータム。メートル単位。',
