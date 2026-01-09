@@ -386,8 +386,8 @@ function extractCRSFromGeoJSON(geojson) {
     // CRS プロパティから座標系情報を抽出
     if (geojson.crs && geojson.crs.properties && geojson.crs.properties.name) {
         const crsName = geojson.crs.properties.name;
-        // EPSG:xxxx の形式を抽出
-        const match = crsName.match(/EPSG[:\s](\d+)/i);
+        // EPSG:xxxx の形式を抽出（URN形式やスペース区切りなど柔軟に対応）
+        const match = crsName.match(/EPSG\D*(\d+)/i);
         if (match) {
             const code = `EPSG:${match[1]}`;
             return { code, name: crsName };
@@ -398,7 +398,7 @@ function extractCRSFromGeoJSON(geojson) {
     // properties内のcrsを確認
     if (geojson.properties && geojson.properties.crs) {
         const crs = geojson.properties.crs;
-        const match = String(crs).match(/EPSG[:\s](\d+)/i);
+        const match = String(crs).match(/EPSG\D*(\d+)/i);
         if (match) {
             const code = `EPSG:${match[1]}`;
             return { code, name: String(crs) };
@@ -420,7 +420,7 @@ function extractCRSFromTopoJSON(topojson) {
     // プロパティ内のCRS情報を確認
     if (topojson.properties && topojson.properties.crs) {
         const crs = topojson.properties.crs;
-        const match = String(crs).match(/EPSG[:\s](\d+)/i);
+        const match = String(crs).match(/EPSG\D*(\d+)/i);
         if (match) {
             const code = `EPSG:${match[1]}`;
             return { code, name: String(crs) };
