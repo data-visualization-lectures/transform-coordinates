@@ -4,6 +4,7 @@
   "description": "座標変換ツール - Proj4jsを使用したブラウザ内座標変換",
   "main": "server.js",
   "scripts": {
+    "build": "mkdir -p dist && cp index.html style.css script.js dist/",
     "start": "node server.js",
     "dev": "node server.js"
   },

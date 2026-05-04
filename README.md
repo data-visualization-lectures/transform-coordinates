@@ -33,6 +33,14 @@ npm start
 
 ブラウザで `http://localhost:3000` にアクセス
 
+### 4. 本番ビルド
+
+```bash
+npm run build
+```
+
+静的公開用ファイルが `dist/` に生成されます。
+
 ## 使い方
 
 ### 基本的な流れ
@@ -120,11 +128,35 @@ Node.jsがインストールされていません。[Node.js公式](https://node
 PORT=3001 npm start
 ```
 
+## デプロイ
+
+このリポジトリは **GitHub に push し、Netlify が自動デプロイする** 前提です。GitHub Pages 用の設定は使いません。
+
+### Netlify 側の設定
+
+Netlify で対象 GitHub リポジトリを接続し、以下を設定してください。
+
+- **Branch to deploy**: `main`（運用ブランチに合わせて変更）
+- **Build command**: `npm run build`
+- **Publish directory**: `dist`
+
+カスタムドメインを使う場合は、GitHub Pages の `CNAME` ファイルではなく、Netlify の Domain settings で `transform-coordinates.dataviz.jp` を設定してください。
+
+### デプロイフロー
+
+1. ローカルで変更
+2. GitHub に push
+3. Netlify が push を検知して `npm run build` を実行
+4. `dist/` を公開
+
 ## 開発
 
 ```bash
-# サーバーの再起動不要で開発
+# ローカルサーバーで確認
 npm start
+
+# Netlify 公開用の静的ファイルを生成
+npm run build
 
 # ブラウザで http://localhost:3000 にアクセス
 ```
@@ -133,9 +165,11 @@ npm start
 ```
 .
 ├── server.js           # Node.js サーバー（静的ファイルの提供のみ）
+├── netlify.toml        # Netlify の build / publish 設定
 ├── index.html          # UIマークアップ
 ├── style.css           # スタイル
 ├── script.js           # フロントエンドロジック（Proj4jsで座標変換）
+├── dist/               # Netlify 公開用のビルド成果物（生成物）
 ├── package.json        # 依存パッケージ
 ├── .gitignore          # Git除外ファイル
 └── README.md           # このファイル
