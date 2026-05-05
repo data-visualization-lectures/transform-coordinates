@@ -1,3 +1,9 @@
 [build]
   command = "npm run build"
   publish = "dist"
+
+[[redirects]]
+  from = "https://transform-coordinates.dataviz.jp/*"
+  to = "https://transform-coordinates.dataprep.jp/:splat"
+  status = 301
+  force = true
